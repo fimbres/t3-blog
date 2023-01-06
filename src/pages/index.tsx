@@ -26,7 +26,7 @@ const Home: NextPage = () => {
         {session ? (
           <div className="sm:w-full mx-auto flex min-h-screen">
             <aside className="w-1/6 pl-3 border-r-2 pt-3 pr-5">
-              <AiFillFire size={40} className="mb-5 text-yellow-400" />
+              <AiFillFire size={40} className="mb-5 text-white bg-gradient-to-b from-yellow-400 to-amber-500 rounded-md p-0.5" />
               <div className="flex items-center my-3">
                 <Image src={session?.user?.image || 'https://th.bing.com/th/id/R.4f1dc5c8acc112fe1d15d3913b5d1cdf?rik=lPBnp8ZWIgAXOQ&riu=http%3a%2f%2fwww.g5fz.co.uk%2fwp-content%2fuploads%2f2017%2f02%2funknown-user.png&ehk=01DSN0wS4pN3yY9n7jq6JqR8eqMYPFjj4Rt9AOtDnxc%3d&risl=&pid=ImgRaw&r=0'} width={30} height={30} className="rounded-full" alt='user-photo' />
                 <Link href={`/${session.user?.name}`}><div className="ml-2 font-black">{session.user?.name}</div></Link>
@@ -43,7 +43,11 @@ const Home: NextPage = () => {
             </Modal>
           </div>
         ) : (
-          <button onClick={() => signIn()}>Sign In</button>
+          <div className=" max-w-lg mx-auto mt-56 flex flex-col justify-center items-center">
+            <AiFillFire size={120} className="mb-5 text-white bg-gradient-to-b from-yellow-400 to-amber-500 rounded-xl p-3" />
+            <div className="text-3xl font-semibold my-3 text-center">The most exclusive social media for posting random stuff!</div>
+            <button className="px-6 py-2 bg-gradient-to-b from-yellow-400 to-amber-500 rounded-full text-lg font-medium mt-4" onClick={() => signIn()}>Sign In</button>
+          </div>
         )}
       </main>
     </>
