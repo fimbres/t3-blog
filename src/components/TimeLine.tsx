@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { api } from '../utils/api'
 import Post from './Post';
 import { BsSignpost2Fill } from "react-icons/bs";
+import { useQueryClient } from '@tanstack/react-query';
 
 const useScrollPosition = () => {
     const [scrollPosition, setScrollPosition] = useState(0);
@@ -34,6 +35,7 @@ const TimeLine = () => {
         getNextPageParam: (lastPage) => lastPage.nextCursor
     });
     const tweets = data?.pages.flatMap(page => page.tweets) ?? [];
+    const client = useQueryClient();
 
     useEffect(() => {
       if(scrollPosition > 90 && hasNextPage && !isFetching){
@@ -46,7 +48,7 @@ const TimeLine = () => {
         tweets.length ? (
             <div className='pr-3 overflow-y-auto'>
                 {tweets.map((post, key) => (
-                    <Post key={key} post={post} />
+                    <Post key={key} post={post} client={client} />
                 ))}
                 {!hasNextPage && <div className='font-black text-center mt-4'>No more posts to load!</div>}
             </div>
