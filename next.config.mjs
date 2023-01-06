@@ -13,5 +13,8 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  images: {
+    domains: ["cdn.discordapp.com", "th.bing.com"]
+  }
 };
 export default config;
