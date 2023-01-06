@@ -32,7 +32,7 @@ const Home: NextPage = () => {
                 <div className="ml-2 font-black">{session.user?.name}</div>
               </div>
               <button className="flex items-center w-full font-medium my-3" onClick={() => signOut()}><RiLogoutBoxRLine size={26} className='mr-2' /> Sign Out</button>
-              <button className="flex w-full justify-center bg-yellow-400 mt-2 font-medium py-2 rounded-full" onClick={() => setShowModal(true)}>Tweet</button>
+              <button className="flex w-full justify-center bg-yellow-400 mt-2 font-medium py-2 rounded-full" onClick={() => setShowModal(true)}>Post</button>
             </aside>
             <section className="pt-3 w-full">
               <div className="text-4xl font-bold mb-12 pl-3">All Posts</div>

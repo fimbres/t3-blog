@@ -44,7 +44,7 @@ const TimeLine = () => {
 
     return (
         tweets.length ? (
-            <div className='pr-3'>
+            <div className='pr-3 overflow-y-auto'>
                 {tweets.map((post, key) => (
                     <Post key={key} post={post} />
                 ))}
