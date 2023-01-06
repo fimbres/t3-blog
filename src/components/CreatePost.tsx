@@ -12,7 +12,13 @@ interface CreatePostProps {
 
 const CreatePost: FC<CreatePostProps> = ({ onClose }) => {
     const [message, setMessage] = useState('');
-    const { mutateAsync } = api.tweet.create.useMutation();
+    const utils = api.useContext();
+    const { mutateAsync } = api.tweet.create.useMutation({
+        onSuccess: () => {
+            setMessage('');
+            utils.tweet.list.invalidate();
+        }
+    });
     const { data: session } = useSession();
 
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
