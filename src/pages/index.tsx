@@ -29,7 +29,7 @@ const Home: NextPage = () => {
               <AiFillFire size={40} className="mb-5 text-yellow-400" />
               <div className="flex items-center my-3">
                 <Image src={session?.user?.image || 'https://th.bing.com/th/id/R.4f1dc5c8acc112fe1d15d3913b5d1cdf?rik=lPBnp8ZWIgAXOQ&riu=http%3a%2f%2fwww.g5fz.co.uk%2fwp-content%2fuploads%2f2017%2f02%2funknown-user.png&ehk=01DSN0wS4pN3yY9n7jq6JqR8eqMYPFjj4Rt9AOtDnxc%3d&risl=&pid=ImgRaw&r=0'} width={30} height={30} className="rounded-full" alt='user-photo' />
-                <div className="ml-2 font-black">{session.user?.name}</div>
+                <Link href={`/${session.user?.name}`}><div className="ml-2 font-black">{session.user?.name}</div></Link>
               </div>
               <button className="flex items-center w-full font-medium my-3" onClick={() => signOut()}><RiLogoutBoxRLine size={26} className='mr-2' /> Sign Out</button>
               <button className="flex w-full justify-center bg-yellow-400 mt-2 font-medium py-2 rounded-full" onClick={() => setShowModal(true)}>Post</button>

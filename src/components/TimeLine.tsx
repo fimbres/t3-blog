@@ -1,3 +1,4 @@
+import type { FC } from 'react';
 import React, { useEffect, useState } from 'react'
 import { api } from '../utils/api'
 import Post from './Post';
@@ -27,10 +28,19 @@ const useScrollPosition = () => {
     return scrollPosition;
 }
 
-const TimeLine = () => {
+interface TimeLineProps {
+    where?: { 
+        author: { 
+            name: string
+        }
+    }
+}
+
+const TimeLine: FC<TimeLineProps> = ({ where }) => {
     const scrollPosition = useScrollPosition();
     const { data, hasNextPage, fetchNextPage, isFetching } = api.tweet.list.useInfiniteQuery({
-        limit: 10
+        limit: 10,
+        where
     }, {
         getNextPageParam: (lastPage) => lastPage.nextCursor
     });
@@ -48,7 +58,7 @@ const TimeLine = () => {
         tweets.length ? (
             <div className='pr-3 overflow-y-auto'>
                 {tweets.map((post, key) => (
-                    <Post key={key} post={post} client={client} />
+                    <Post key={key} post={post} client={client} input={{ limit: 10, where }} />
                 ))}
                 {!hasNextPage && <div className='font-black text-center mt-4'>No more posts to load!</div>}
             </div>

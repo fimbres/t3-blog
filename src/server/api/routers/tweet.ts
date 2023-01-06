@@ -34,11 +34,16 @@ export const tweetRouter = createTRPCRouter({
             z.object({
                 cursor: z.string().nullish(),
                 limit: z.number().min(1).max(100).default(10),
+                where: z.object({
+                    author: z.object({
+                        name: z.string().optional()
+                    })
+                }).optional()
             })
         )
         .query(async ({ ctx, input}) => {
             const { prisma } = ctx;
-            const { cursor, limit } = input;
+            const { cursor, limit, where } = input;
 
             const userId = ctx.session?.user?.id;
 
@@ -49,6 +54,7 @@ export const tweetRouter = createTRPCRouter({
                         createdAt: "desc"
                     }
                 ],
+                where,
                 cursor: cursor ? { id: cursor } : undefined,
                 include: {
                     likes: {

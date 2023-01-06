@@ -3,8 +3,9 @@ import React from 'react'
 import Image from 'next/image';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import { BiComment, BiShare } from 'react-icons/bi';
+import Link from 'next/link';
 
-import type { RouterOutputs} from '../utils/api';
+import type { RouterInputs, RouterOutputs} from '../utils/api';
 import { api } from '../utils/api';
 import moment from 'moment';
 import type { InfiniteData, QueryClient } from '@tanstack/react-query';
@@ -12,16 +13,15 @@ import type { InfiniteData, QueryClient } from '@tanstack/react-query';
 interface PostProps {
     post: RouterOutputs["tweet"]["list"][number];
     client: QueryClient;
+    input: RouterInputs["tweet"]["list"];
 }
 
-const Post: FC<PostProps> = ({ client, post }) => {
-    const updateCache = (client: QueryClient, variables: { tweetId: string }, data: { userId: string }, action: "like" | "unlike") => {
+const Post: FC<PostProps> = ({ client, post, input }) => {
+    const updateCache = (client: QueryClient, variables: { tweetId: string }, data: { userId: string }, action: "like" | "unlike", input: RouterInputs["tweet"]["list"]) => {
         client.setQueryData([
             ["tweet", "list"],
             {
-                input: {
-                    limit: 10,
-                },
+                input,
                 type: "infinite"
             }
         ],
@@ -53,8 +53,8 @@ const Post: FC<PostProps> = ({ client, post }) => {
         });
     }
 
-    const likeMutation = api.tweet.like.useMutation({ onSuccess: (data, variables) => updateCache(client, data, variables, 'like') }).mutateAsync;
-    const unlikeMutation = api.tweet.unlike.useMutation({ onSuccess: (data, variables) => updateCache(client, data, variables, 'unlike') }).mutateAsync;
+    const likeMutation = api.tweet.like.useMutation({ onSuccess: (data, variables) => updateCache(client, data, variables, 'like', input) }).mutateAsync;
+    const unlikeMutation = api.tweet.unlike.useMutation({ onSuccess: (data, variables) => updateCache(client, data, variables, 'unlike', input) }).mutateAsync;
     const hasLiked = post.likes.length > 0;
 
     return (
@@ -62,7 +62,7 @@ const Post: FC<PostProps> = ({ client, post }) => {
             <Image src={post.author.image || 'https://th.bing.com/th/id/R.4f1dc5c8acc112fe1d15d3913b5d1cdf?rik=lPBnp8ZWIgAXOQ&riu=http%3a%2f%2fwww.g5fz.co.uk%2fwp-content%2fuploads%2f2017%2f02%2funknown-user.png&ehk=01DSN0wS4pN3yY9n7jq6JqR8eqMYPFjj4Rt9AOtDnxc%3d&risl=&pid=ImgRaw&r=0'} width={40} height={40} alt='user-profile' className='rounded-full'/>
             <div className='ml-3 w-full'>
                 <div className='flex'>
-                    <div className='font-black mr-1.5'>{post.author.name}</div>
+                    <Link href={`/${post.author.name}`}><div className='font-black mr-1.5'>{post.author.name}</div></Link>
                     <div className='font-light text-gray-500 mr-1.5'>{post.author.email} ∙ {moment(post.createdAt).fromNow()}</div>
                 </div>
                 <div className='text-lg'>{post.text}</div>
