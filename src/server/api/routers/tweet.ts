@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
+
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const tweetRouter = createTRPCRouter({
     create: protectedProcedure
@@ -14,7 +15,8 @@ export const tweetRouter = createTRPCRouter({
             const { prisma, session } = ctx;
             const { text } = input;
 
-            const userId = session.user.id;
+            String(text);
+            const userId = session.user.id as string;
 
             return prisma.tweet.create({
                 data: {
@@ -26,5 +28,39 @@ export const tweetRouter = createTRPCRouter({
                     }
                 }
             });
+        }),
+    list: publicProcedure
+        .input(
+            z.object({
+                cursor: z.string().nullish(),
+                limit: z.number().min(1).max(100).default(10),
+            })
+        )
+        .query(async ({ ctx, input}) => {
+            const { prisma } = ctx;
+            const { cursor, limit } = input;
+
+            const tweets = await prisma.tweet.findMany({
+                take: limit + 1,
+                orderBy: {
+                    createdAt: "desc"
+                },
+                include: {
+                    author: true
+                }
+            });
+
+            let nextCursor : typeof cursor | undefined = undefined;
+
+            if(tweets.length > limit) {
+                const nextItem = tweets.pop() as typeof tweets[number];
+                
+                nextCursor = nextItem.id;
+            }
+
+            return {
+                tweets,
+                nextCursor
+            };
         })
 });
